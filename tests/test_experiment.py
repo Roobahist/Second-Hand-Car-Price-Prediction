@@ -3,6 +3,7 @@
 import json
 
 import pandas as pd
+import pytest
 
 from car_price_prediction.config import ExperimentConfig
 from car_price_prediction.experiment import run_experiment
@@ -41,3 +42,37 @@ def test_training_outputs_and_reproducibility(tmp_path) -> None:
         assert (first.output_dir / name).is_file()
     model = load_model(first.output_dir / "model.joblib")
     assert isinstance(predict_price(model, rows[0]), float)
+
+
+@pytest.mark.parametrize("alpha", [float("nan"), float("inf"), -1.0])
+def test_rejects_invalid_regularization(alpha: float) -> None:
+    with pytest.raises(ValueError, match="alpha must be finite and non-negative"):
+        ExperimentConfig(alpha=alpha)
+
+
+@pytest.mark.parametrize(
+    ("test_size", "cv_folds", "expected"),
+    [
+        (0.05, 3, "Holdout must contain at least two rows"),
+        (0.2, 5, "Each cross-validation fold needs at least two validation rows"),
+    ],
+)
+def test_rejects_splits_that_cannot_compute_r_squared(
+    tmp_path, test_size: float, cv_folds: int, expected: str
+) -> None:
+    data = pd.DataFrame([
+        {
+            "brand": f"model-{i}", "color": "white", "gear": "manual",
+            "year": 1380 + i, "body": "clean", "loc_1": "Tehran",
+            "usage": 1_000 * i, "price": 5_000_000 + i * 2_000_000,
+        }
+        for i in range(10)
+    ])
+    path = tmp_path / "small.csv"
+    data.to_csv(path, index=False)
+    config = ExperimentConfig(
+        data_path=path, output_dir=tmp_path / "output",
+        cv_folds=cv_folds, test_size=test_size,
+    )
+    with pytest.raises(ValueError, match=expected):
+        run_experiment(config)
