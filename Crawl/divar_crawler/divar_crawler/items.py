@@ -1,14 +1,14 @@
-# -*- coding: utf-8 -*-
-
-# Define here the models for your scraped items
-#
-# See documentation in:
-# https://docs.scrapy.org/en/latest/topics/items.html
+"""Structured fields extracted from historical used-car advertisements."""
 
 import scrapy
 
 
-class DivarCrawlerItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class CarListing(scrapy.Item):
+    brand = scrapy.Field()
+    year = scrapy.Field()
+    color = scrapy.Field()
+    body = scrapy.Field()
+    gear = scrapy.Field()
+    price = scrapy.Field()
+    usage = scrapy.Field()
+    cit = scrapy.Field()

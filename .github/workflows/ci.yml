@@ -1,0 +1,66 @@
+name: Python checks
+
+on:
+  push:
+    branches: [master, "modernize/**"]
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    if: github.event_name != 'pull_request' || github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: "0.10.0"
+          enable-cache: true
+      - name: Install Python
+        run: uv python install 3.11
+      - name: Verify lockfile and install project
+        run: uv sync --locked --python 3.11
+      - name: Lint source and tests
+        run: uv run --locked ruff check src tests Crawl/divar_crawler/divar_crawler/spiders/Divar.py Crawl/divar_crawler/divar_crawler/items.py Crawl/divar_crawler/concate_cars_csv.py Crawl/pishpardazesh_data_divar.py
+      - name: Test
+        run: uv run --locked pytest -q
+      - name: Train on versioned historical data
+        run: uv run --locked car-price train --folds 3 --output artifacts
+      - name: Archive reproducible metrics and plots
+        uses: actions/upload-artifact@v7
+        with:
+          name: historical-baseline
+          path: |
+            artifacts/metrics.json
+            artifacts/holdout_predictions.csv
+            artifacts/actual_vs_predicted.png
+            artifacts/residuals.png
+          if-no-files-found: error
+
+  cleanup-merged-branch:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.action == 'closed' &&
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref != github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Remove merged feature branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          if gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${PR_BRANCH}" >/dev/null 2>&1; then
+            gh api -X DELETE "repos/${GITHUB_REPOSITORY}/git/refs/heads/${PR_BRANCH}"
+          else
+            echo "Branch has already been removed."
+          fi
