@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from car_price_prediction.data import CATEGORICAL_FEATURES, FEATURES, TARGET, validate_listings
+from car_price_prediction.data import FEATURES, TARGET, validate_listings
 
 RAW_COLUMNS = ("body", "brand", "cit", "color", "gear", "price", "usage", "year")
 BRAND_RENAMES = {"Peugeot 405 GLX-petrol": "پژو 405 GLX بنزینی"}
