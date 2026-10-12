@@ -1,9 +1,9 @@
 # Verified maintained-model benchmark
 
 This page records measurements from
-[GitHub Actions run 38236856529](https://github.com/Roobahist/Second-Hand-Car-Price-Prediction/actions/runs/38236856529),
+[GitHub Actions run 38300441780](https://github.com/Roobahist/Second-Hand-Car-Price-Prediction/actions/runs/38300441780),
 executed on October 12, 2026. All checks passed on
-commit `a22694be47ab83ee809deefd500ad884d6a9f079`.
+commit `cf23f4ad294dc115861851f2a19d416c59241ef0`.
 
 Command:
 
@@ -15,10 +15,9 @@ The input was `Preprocessing/cleaned_data.csv`, SHA-256
 `f70418b4a282fa4b00534b3d7c5c2ca2ce41f559ce5f947d2c9cea4594a7290d`.
 This run used a seeded 80/20 train/holdout split (seed 42) and Ridge alpha 10.
 
-New training runs also record Python, NumPy, pandas, and scikit-learn
-versions in `metrics.json`, allowing results to be interpreted against their
-actual software environment. The historical measurements below come from the
-linked earlier CI run; they have not been silently recalculated.
+The recorded software environment was Python 3.11.17, NumPy 2.4.6,
+pandas 2.3.3, and scikit-learn 1.9.1. These versions are stored in
+`metrics.json` alongside the dataset checksum and experiment parameters.
 
 | Measurement | Observed value |
 | --- | ---: |
