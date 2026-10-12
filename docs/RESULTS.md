@@ -15,6 +15,11 @@ The input was `Preprocessing/cleaned_data.csv`, SHA-256
 `f70418b4a282fa4b00534b3d7c5c2ca2ce41f559ce5f947d2c9cea4594a7290d`.
 This run used a seeded 80/20 train/holdout split (seed 42) and Ridge alpha 10.
 
+New training runs also record Python, NumPy, pandas, and scikit-learn
+versions in `metrics.json`, allowing results to be interpreted against their
+actual software environment. The historical measurements below come from the
+linked earlier CI run; they have not been silently recalculated.
+
 | Measurement | Observed value |
 | --- | ---: |
 | Input rows | 11,372 |
