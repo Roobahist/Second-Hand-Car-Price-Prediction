@@ -31,8 +31,12 @@ def run_experiment(
         data.loc[:, FEATURES], data[TARGET], test_size=config.test_size,
         random_state=config.random_state
     )
-    if len(x_train) < config.cv_folds:
-        raise ValueError("cv_folds exceeds the number of training samples")
+    if len(y_test) < 2:
+        raise ValueError("Holdout must contain at least two rows to compute R²")
+    if len(x_train) // config.cv_folds < 2:
+        raise ValueError(
+            "Each cross-validation fold needs at least two validation rows to compute R²"
+        )
 
     cv = KFold(n_splits=config.cv_folds, shuffle=True, random_state=config.random_state)
     validation = cross_validate(
