@@ -1,6 +1,7 @@
 """Validated parameters for experiments and reproducible outputs."""
 
 from dataclasses import dataclass
+from math import isfinite
 from pathlib import Path
 
 
@@ -20,5 +21,5 @@ class ExperimentConfig:
             raise ValueError("cv_folds must be at least 2")
         if self.random_state < 0:
             raise ValueError("random_state must be non-negative")
-        if self.alpha < 0:
-            raise ValueError("alpha must be non-negative")
+        if not isfinite(self.alpha) or self.alpha < 0:
+            raise ValueError("alpha must be finite and non-negative")
