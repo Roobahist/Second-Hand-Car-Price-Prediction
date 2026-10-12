@@ -21,4 +21,5 @@ explicitly justified. Never present notebook outputs as newly reproduced.
 - Generated models and plots are stored in ignored `artifacts/`.
 - Do not load untrusted `.joblib` files; pickle can execute arbitrary code.
 - Legacy scraper selectors have not been checked against the current website.
+- Keep crawler URL generation separate from parse callbacks to avoid recursive pagination.
 - Do not re-license historical datasets or alter Git history automatically.

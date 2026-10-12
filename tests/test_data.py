@@ -32,6 +32,7 @@ def test_rejects_missing_invalid_and_negative_data(sample_data: pd.DataFrame) ->
     sample_data.loc[0, "usage"] = -2
     with pytest.raises(ValueError, match="Mileage"):
         validate_listings(sample_data)
+    sample_data["usage"] = sample_data["usage"].astype(object)
     sample_data.loc[0, "usage"] = "unknown"
     with pytest.raises(ValueError, match="missing or nonnumeric"):
         validate_listings(sample_data)

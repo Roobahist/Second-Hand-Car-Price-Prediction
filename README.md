@@ -24,7 +24,7 @@ new measurements. In particular, the original neural-network workflow standardiz
 the full dataset before splitting folds, creating **validation leakage**. It also reused
 fold 1 in the residual visualization loop. See [research notes](docs/RESEARCH.md).
 The new Ridge pipeline uses a different evaluation protocol, so results are **not**
-directly comparable to this table.
+directly comparable to this table. See the [verified maintained-model benchmark](docs/RESULTS.md).
 
 ## Quick start
 
@@ -75,6 +75,11 @@ car-price prepare --raw Crawl/final_result.csv --output data/processed.csv
 car-price train --data data/processed.csv --output artifacts/derived
 ```
 
+To reconstruct the original per-model crawler export, use
+`python Crawl/divar_crawler/concate_cars_csv.py` after installing the package.
+The optional spider and its constraints are documented in
+[Crawl/README.md](Crawl/README.md).
+
 The preparation command exposes the historical rare-category and 99th-percentile
 trimming rules and removes exact duplicates. It **does not guarantee a byte-for-byte
 reconstruction** of the legacy `cleaned_data.csv`, whose notebook shuffled data
@@ -89,7 +94,7 @@ without a fixed seed. Check preprocessing bias before using a cleaned dataset.
 | `docs/` | Data and experiment caveats, architecture and maintenance |
 | `Preprocessing/` | Original prepared CSV files and historical notebook |
 | `Analysis/` | Original regression and neural-network experiments |
-| `Crawl/` | Historical Scrapy crawler, source exports and preprocessing script |
+| `Crawl/` | Configurable opt-in Scrapy crawler, historical exports and compatibility scripts |
 | `Gui/` | Original Tkinter GUI, icon and legacy neural-network weights |
 | `report.pdf` | Original research report, retained unchanged |
 

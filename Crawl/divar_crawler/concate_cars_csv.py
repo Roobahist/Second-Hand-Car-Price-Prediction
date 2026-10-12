@@ -1,12 +1,20 @@
-import os
-import glob
-import pandas as pd
-os.chdir("/home/ali/PycharmProjects/Car_predict/divar_crawler/New Folder")
+"""Compatibility wrapper for combining per-model crawler exports."""
 
-extension = 'csv'
-all_filenames = [i for i in glob.glob('*.{}'.format(extension))]
+import argparse
+from pathlib import Path
 
-#combine all files in the list
-combined_csv = pd.concat([pd.read_csv(f) for f in all_filenames ])
-#export to csv
-combined_csv.to_csv( "combined_csv.csv", index=False, encoding='utf-8-sig')
+from car_price_prediction.crawl_exports import combine_csv_exports
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parent = Path(__file__).resolve().parent
+    parser.add_argument("--input-dir", type=Path, default=parent / "New Folder")
+    parser.add_argument("--output", type=Path, default=parent / "combined_csv.csv")
+    options = parser.parse_args()
+    count = combine_csv_exports(options.input_dir, options.output)
+    print(f"Combined {count} files into {options.output}")
+
+
+if __name__ == "__main__":
+    main()

@@ -33,8 +33,9 @@ flowchart LR
 - `cli.py` and `gui.py`: presentation interfaces sharing the fitted artifact.
 - `config.py`: validated tunable settings injected into the experiment.
 
-The existing `Crawl/divar_crawler` Scrapy package is a historical data source,
-not a required part of the modeling package. The old Keras GUI is also retained
+The existing `Crawl/divar_crawler` Scrapy package is an optional historical
+acquisition source. Its URL generation and export merging have isolated,
+testable modules; its extraction selectors remain unverified for current Divar. The old Keras GUI is also retained
 as a reference and is intentionally not connected to the new artifact.
 
 ## Explicitly deferred
