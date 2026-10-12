@@ -34,6 +34,9 @@ def test_training_outputs_and_reproducibility(tmp_path) -> None:
     second_metrics = run_experiment(second)
 
     assert first_metrics == second_metrics
+    assert set(first_metrics["environment"]) == {
+        "python", "numpy", "pandas", "scikit_learn"
+    }
     assert first_metrics["holdout_rows"] > 0
     assert first_metrics["median_baseline_holdout_mae_toman"] >= 0
     assert json.loads((first.output_dir / "metrics.json").read_text()) == first_metrics
