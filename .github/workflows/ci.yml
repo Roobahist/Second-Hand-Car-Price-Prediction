@@ -22,13 +22,13 @@ jobs:
       - name: Install project
         run: python -m pip install -e ".[dev]"
       - name: Lint source and tests
-        run: ruff check src tests
+        run: ruff check src tests Crawl/divar_crawler/divar_crawler/spiders/Divar.py Crawl/divar_crawler/divar_crawler/items.py Crawl/divar_crawler/concate_cars_csv.py Crawl/pishpardazesh_data_divar.py
       - name: Test
         run: python -m pytest -q
       - name: Train on versioned historical data
         run: car-price train --folds 3 --output artifacts
       - name: Archive reproducible metrics and plots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: historical-baseline
           path: |
