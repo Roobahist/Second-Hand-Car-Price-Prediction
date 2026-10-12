@@ -10,9 +10,9 @@ fragile and may yield no records. Crawling is deliberately excluded from CI.
 Install optional dependencies from the repository root:
 
 ```bash
-python -m pip install -e ".[crawl]"
+uv sync --locked --extra crawl
 cd Crawl/divar_crawler
-scrapy crawl Divar -a cities=tehran,karaj -a car_model=pride/131 -a max_pages=2 -O listings.csv
+uv run --locked --extra crawl scrapy crawl Divar -a cities=tehran,karaj -a car_model=pride/131 -a max_pages=2 -O listings.csv
 ```
 
 The spider now constructs each page URL once rather than recursively creating
@@ -22,9 +22,9 @@ are configurable, and the Scrapy project still respects robots.txt.
 Offline data preparation can be run from the repository root:
 
 ```bash
-python Crawl/divar_crawler/concate_cars_csv.py
-car-price prepare --raw Crawl/divar_crawler/combined_csv.csv --output data/processed.csv
+uv run --locked python Crawl/divar_crawler/concate_cars_csv.py
+uv run --locked car-price prepare --raw Crawl/divar_crawler/combined_csv.csv --output data/processed.csv
 ```
 
-Use `car-price train --data data/processed.csv` to evaluate the new data.
+Use `uv run --locked car-price train --data data/processed.csv` to evaluate the new data.
 Never assume a fresh crawl uses the same market distribution as the snapshot.

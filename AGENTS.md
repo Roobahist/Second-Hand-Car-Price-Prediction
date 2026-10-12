@@ -16,8 +16,9 @@ explicitly justified. Never present notebook outputs as newly reproduced.
 - Reject missing and implausible inputs explicitly; do not force negative
   predictions positive with `abs`.
 - Tests use synthetic fixtures, not external services or sites.
-- To verify: `python -m pip install -e ".[dev]"`, `ruff check src tests`,
-  `python -m pytest -q`, `car-price train --folds 3`.
+- To verify: `uv sync --locked`, `uv run --locked ruff check src tests`,
+  `uv run --locked pytest -q`, `uv run --locked car-price train --folds 3`.
+- Keep `uv.lock` committed and update it with `uv lock` when dependencies change.
 - Generated models and plots are stored in ignored `artifacts/`.
 - Do not load untrusted `.joblib` files; pickle can execute arbitrary code.
 - Legacy scraper selectors have not been checked against the current website.

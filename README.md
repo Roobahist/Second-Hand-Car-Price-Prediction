@@ -45,7 +45,8 @@ then fits one model and evaluates the held-out records exactly once.
 Training writes `artifacts/model.joblib`, `metrics.json`,
 `holdout_predictions.csv`, `actual_vs_predicted.png` and `residuals.png`.
 Generated results are ignored by Git. Training is reproducible on the same input
-file and library versions; record the data SHA-256 and dependency versions.
+file and library versions; record the data SHA-256 and dependency versions. Use the checked-in `uv.lock`
+to preserve resolved versions across machines.
 R² evaluation requires at least two holdout observations and at least two
 validation observations per cross-validation fold. The command rejects splits
 that cannot produce meaningful R² values.
@@ -53,19 +54,19 @@ that cannot produce meaningful R² values.
 For a different seed, dataset, fold count or regularization strength:
 
 ```bash
-car-price train --data Preprocessing/cleaned_data.csv --output artifacts --seed 42 --folds 5 --alpha 10
+uv run --locked car-price train --data Preprocessing/cleaned_data.csv --output artifacts --seed 42 --folds 5 --alpha 10
 ```
 
 Predict from the same fitted preprocessing and model artifact:
 
 ```bash
-car-price predict --model artifacts/model.joblib --brand "پژو 206 تیپ ۲" --color "سفید" --gear "دنده‌ای" --year 1394 --body "بدون رنگ" --city "تهران" --usage 80000
+uv run --locked car-price predict --model artifacts/model.joblib --brand "پژو 206 تیپ ۲" --color "سفید" --gear "دنده‌ای" --year 1394 --body "بدون رنگ" --city "تهران" --usage 80000
 ```
 
 Or launch the desktop interface on a computer with Tkinter and a graphical desktop:
 
 ```bash
-car-price gui --model artifacts/model.joblib
+uv run --locked car-price gui --model artifacts/model.joblib
 ```
 
 Only load model files from **trusted** sources. scikit-learn/joblib model artifacts
@@ -74,12 +75,12 @@ rely on Python pickle serialization.
 ## Recreate a cleaned dataset from the crawl
 
 ```bash
-car-price prepare --raw Crawl/final_result.csv --output data/processed.csv
-car-price train --data data/processed.csv --output artifacts/derived
+uv run --locked car-price prepare --raw Crawl/final_result.csv --output data/processed.csv
+uv run --locked car-price train --data data/processed.csv --output artifacts/derived
 ```
 
 To reconstruct the original per-model crawler export, use
-`python Crawl/divar_crawler/concate_cars_csv.py` after installing the package.
+`uv run --locked python Crawl/divar_crawler/concate_cars_csv.py` after installing the package.
 The optional spider and its constraints are documented in
 [Crawl/README.md](Crawl/README.md).
 
@@ -108,8 +109,9 @@ use `car-price gui` for a newly trained Ridge model.
 ## Development
 
 ```bash
-ruff check src tests
-python -m pytest -q
+uv sync --locked
+uv run --locked ruff check src tests
+uv run --locked pytest -q
 ```
 
 CI runs these checks plus a full training job on the committed cleaned CSV. The

@@ -1,0 +1,32 @@
+name: Bootstrap uv lockfile
+
+on:
+  push:
+    branches: ["modernize/reproducible-ml-pipeline"]
+    paths:
+      - pyproject.toml
+      - .github/workflows/bootstrap-uv-lock.yml
+
+permissions:
+  contents: write
+
+jobs:
+  lock:
+    if: github.repository == 'Roobahist/Second-Hand-Car-Price-Prediction'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: "0.10.0"
+      - name: Generate and commit lockfile
+        run: |
+          uv lock --python 3.11
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add uv.lock
+          if ! git diff --cached --quiet; then
+            git commit -m "build: lock Python dependencies with uv"
+            git push origin HEAD:modernize/reproducible-ml-pipeline
+          fi
