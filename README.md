@@ -46,6 +46,9 @@ Training writes `artifacts/model.joblib`, `metrics.json`,
 `holdout_predictions.csv`, `actual_vs_predicted.png` and `residuals.png`.
 Generated results are ignored by Git. Training is reproducible on the same input
 file and library versions; record the data SHA-256 and dependency versions.
+R² evaluation requires at least two holdout observations and at least two
+validation observations per cross-validation fold. The command rejects splits
+that cannot produce meaningful R² values.
 
 For a different seed, dataset, fold count or regularization strength:
 
