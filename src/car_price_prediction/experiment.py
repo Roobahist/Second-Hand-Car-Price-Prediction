@@ -2,12 +2,14 @@
 
 import hashlib
 import json
+import platform
 from collections.abc import Callable
 from pathlib import Path
 
 import joblib
 import numpy as np
 import pandas as pd
+import sklearn
 from sklearn.dummy import DummyRegressor
 from sklearn.metrics import mean_absolute_error, r2_score
 from sklearn.model_selection import KFold, cross_validate, train_test_split
@@ -54,6 +56,12 @@ def run_experiment(
 
     results: dict[str, object] = {
         "data_file": str(config.data_path),
+        "environment": {
+            "python": platform.python_version(),
+            "numpy": np.__version__,
+            "pandas": pd.__version__,
+            "scikit_learn": sklearn.__version__,
+        },
         "data_sha256": hashlib.sha256(config.data_path.read_bytes()).hexdigest(),
         "rows_after_exact_deduplication": len(data),
         "train_rows": len(x_train),
